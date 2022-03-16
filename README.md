@@ -22,7 +22,7 @@ Corresponding **npm** should be more than 6.
 
 - make sure you are in *react-frontend* directory
 - Execute **npm install** (One time only to install node modules) on command line
-- Execute **npm run** on command line
+- Execute **npm start** on command line
 
 ## Backend
 
