@@ -18,6 +18,12 @@ Corresponding **npm** should be more than 6.
 - Execute **npm i** (One time only to install node modules) on command line
 - Execute **npm run** on command line
 
+### How to run(React)
+
+- make sure you are in *react-frontend* directory
+- Execute **npm install** (One time only to install node modules) on command line
+- Execute **npm run** on command line
+
 ## Backend
 
 ### Prerequisites
