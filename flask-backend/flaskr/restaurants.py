@@ -1,10 +1,12 @@
 import functools
+import os
 
 from flask import (
-    Blueprint, flash, g, request, session, make_response
+    Blueprint, json, make_response
 )
 
 from flaskr.auth import login_required
+from flask import jsonify
 
 from flaskr.db import get_db
 
@@ -13,10 +15,8 @@ bp = Blueprint('restaurant', __name__, url_prefix='/restaurants')
 @bp.route('/', methods=["GET"])
 @login_required
 def get_restaurant_list():
-    ##TODO: Replace this code with JSON file
-    return {
-        "restaurant_name": "Spice N Rice",
-        "location": "Dublin 1",
-        "budget": "20",
-    }
+    SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
+    json_url = os.path.join(SITE_ROOT, "./Business_Restaurant.json")
+    data = json.load(open(json_url))
+    return make_response(jsonify(data), 201)
  
