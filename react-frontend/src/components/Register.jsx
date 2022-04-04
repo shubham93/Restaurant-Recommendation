@@ -1,8 +1,6 @@
 import React from 'react';
+import {Outlet,NavLink,Link} from 'react-router-dom'
 import {Container,Col,Row,Card,Form,Button} from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import {Link} from 'react-router-dom';
-
 export default class Register extends React.Component{
 
     constructor(props){
@@ -10,8 +8,24 @@ export default class Register extends React.Component{
     }
 
     render(){
+
         return(
+
             <div>
+        <Container>
+          <Row className="justify-content-center">
+            <Col md={9} lg={12} xl={10} >
+            <Card className="card shadow-lg o-hidden border-0 my-5">
+            <Card.Body className="p-0">
+         
+              <Row>
+                <Col lg={6} className="d-none d-lg-flex">
+                <div ref={this.imgdiv} className="flex-grow-1 bg-login-image"></div>
+                </Col>
+  
+                <Col lg={6}>
+                   <div className="p-5">
+                   <div>
                 <div className="text-center">
                               <h4 className="text-dark mb-4">Create an Account!</h4>
                               </div>
@@ -58,9 +72,20 @@ export default class Register extends React.Component{
                           </Form>      
                           <hr/>
                           <div className="text-center">
-                            <Link to="/login">Already have an account? Login!</Link>
+                            <Link to="../login">Already have an account? Login!</Link>
                           </div>
             </div>
+                   </div>
+                </Col>
+              </Row>
+             
+            </Card.Body>
+          </Card>
+            </Col>
+          </Row>
+        </Container>
+      </div>
+
         )
     }
 
