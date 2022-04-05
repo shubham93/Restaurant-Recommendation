@@ -1,47 +1,48 @@
 import logo from './logo.svg';
+import React from 'react';
 import './App.css';
 import {Container,Col,Row,Card,Form,Button} from 'react-bootstrap';
-import {NavLink,BrowserRouter,Route,Routes,Outlet} from 'react-router-dom'
+import {NavLink,BrowserRouter,Route,Routes,Outlet,Navigate} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './components/Login';
 import Register from './components/Register';
-function App() {
-  return (
-    <div>
-      <Container>
-        <Row className="justify-content-center">
-          <Col md={9} lg={12} xl={10} >
-          <Card className="card shadow-lg o-hidden border-0 my-5">
-          <Card.Body className="p-0">
-       
-            <Row>
-              <Col lg={6} className="d-none d-lg-flex">
-              <div className="flex-grow-1 bg-login-image"></div>
-              </Col>
+import Main from './components/main';
+import UserAuth from './components/user';
+import Homepage from './components/homepage'
+import Find from './components/find'
 
-              <Col lg={6}>
-                 <div className="p-5">
-                      <Routes>
-                <Route path="/" >
+class App extends React.Component {
+  constructor(props){
+    super(props);
+    this.imgdiv = React.createRef() ;
+    this.changeImg = this.changeImg.bind(this);
+  }
+
+
+
+  changeImg = (newUrl) =>{
+      console.log(this.imgdiv.current);
+  }
+
+  render(){
+    return (
+      <Routes>
+                  
                   <Route path="login" element={<Login/>}/>
                   <Route path="register" element={<Register/>} />
                   
-                </Route>
-                
-                <Route index element={<Login/>} />
 
-              </Routes>
-                 </div>
-              </Col>
-            </Row>
-           
-          </Card.Body>
-        </Card>
-          </Col>
-        </Row>
-      </Container>
-    </div>
-  );
+                  <Route path="app"  element={<Main/>} >
+                      <Route path="home" element={<Homepage/>}/>
+                      <Route path="find" element={<Find/>}/>
+                    </Route>
+
+                  <Route path="*" element={<Navigate to="/app/home"></Navigate>}></Route>
+                  
+  
+      </Routes>
+    );
+  }
 }
 
 export default App;
