@@ -1,6 +1,7 @@
 import React from 'react';
-import {Outlet,NavLink,Link} from 'react-router-dom'
-import {Container,Col,Row,Card,Form,Button} from 'react-bootstrap';
+import {Link} from 'react-router-dom'
+import {Container,Col,Row,Card,Form} from 'react-bootstrap';
+import '../bootstrap.min.css';
 
 export default class Login extends React.Component{
 
@@ -41,12 +42,15 @@ export default class Login extends React.Component{
                             <Form.Group className="mb-3 styleform small" controlId="formBasicCheckbox">
                               <Form.Check type="checkbox" label="Remeber me" />
                             </Form.Group>
-                            <Button bsPrefix="btn-user" className="d-block btn-primary btn-user w-100">Login</Button>
+                            <button  className="d-block btn-primary btn-user w-100" type="submit">Login</button>
                             
                           </Form>      
                           <hr/>
                           <div className="text-center">
                             <Link to="../register">Create an Account!</Link>
+                          </div>
+                          <div className="text-center">
+                            <Link to="../homepage">Back to Homepage</Link>
                           </div>
             </div>
                    </div>
