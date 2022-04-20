@@ -7,17 +7,23 @@ export default class Profile extends React.Component{
     constructor(props){
         super(props);
         this.categoryOptions = [
-            { label: 'Cantonese Cuisine', value: 'cc' },
-            { label: 'Indian Food', value: 'if' },
-            { label: 'food1', value: 'ff1' },
-            { label: 'food2', value: 'ff2' },
-            { label: 'food3', value: 'ff3' },
-            { label: 'food4', value: 'ff4' },
+            { label: 'Chinese', value: 'Chinese' },
+            { label: 'Asian Fusion', value: 'Asian Fusion' },
+            { label: 'Seafood', value: 'Seafood' },
+            { label: 'Sushi Bars', value: 'Sushi Bars' },
+            { label: 'Pizza', value: 'Pizza' },
+            { label: 'Burger', value: 'Burgers' },
+            { label: 'Hotdog', value: 'Hot Dogs' },
+            { label: 'Wine & Spirits', value: 'Wine & Spirits' },
+            { label: 'Tacos', value: 'Tacos' },
+            { label: 'Chicken Wings', value:'Chicken Wings'},
+            { label: 'Sandwiches', value:'Sandwiches'},
+
           ];
           this.PriceRangeOptions = [
-            { label: '1', value: '1' },
-            { label: '2', value: '2' },
-            { label: '3', value: '3' },
+            { label: '$', value: '1' },
+            { label: '$$', value: '2' },
+            { label: '$$$', value: '3' },
           ];
     }
 
@@ -46,9 +52,9 @@ export default class Profile extends React.Component{
                             <Col span={6}>
                                 <Space direction='vertical'>
                                     <label className="form-label" htmlFor="Alcohol"><strong>Alcohol</strong></label>
-                                    <Radio.Group onChange={() => console.log("Alcohol changed")} defaultValue={'FullBar'}>
-                                    <Radio value={'FullBar'}>FullBar</Radio>
-                                    <Radio value={'BeerAndWine'}>BeerandWine</Radio>
+                                    <Radio.Group onChange={() => console.log("Alcohol changed")} defaultValue={"u'full_bar'"}>
+                                    <Radio value={"u'full_bar'"}>FullBar</Radio>
+                                    <Radio value={"'beer_and_wine'"}>BeerandWine</Radio>
                                     <Radio value={'None'}>None</Radio>
                                     </Radio.Group>
                                 </Space>
@@ -56,9 +62,9 @@ export default class Profile extends React.Component{
                             <Col span={6}>
                             <Space direction='vertical'>
                                     <label className="form-label" htmlFor="Wifi"><strong>Wifi</strong></label>
-                                    <Radio.Group onChange={() => console.log("Wifi changed")} defaultValue={'Free'}>
-                                    <Radio value={'Free'}>Free</Radio>
-                                    <Radio value={'NotFree'}>NotFree</Radio>
+                                    <Radio.Group onChange={() => console.log("Wifi changed")} defaultValue={"u'free'"}>
+                                    <Radio value={"u'free'"}>Free</Radio>
+                                    <Radio value={"u'no'"}>NotFree</Radio>
                                     </Radio.Group>
                                 </Space>
                             </Col>
@@ -85,7 +91,7 @@ export default class Profile extends React.Component{
                             </Col>
                             <Col span={6}>
                               <Space direction="vertical">
-                                  <label className="form-label" htmlFor="Reservation"><strong>ReservationAccepted</strong></label>
+                                  <label className="form-label" htmlFor="RestaurantsReservations"><strong>RestaurantsReservations</strong></label>
                               <Switch checkedChildren="Yes" unCheckedChildren="No" onChange={() => console.log("ReservationAccepted changed")} defaultUnChecked/>
                               </Space>
                             </Col>

@@ -78,11 +78,11 @@ export default class Find extends React.Component{
                 <h3 className="text-dark mb-4">Find the restaurant fits you best!</h3>
                 <div className="card shadow">
                   <div className="card-header py-3">
-                    <p className="text-primary m-0 fw-bold">Restaurant List</p>
+                    <p className="text-primary m-0 fw-bold">Recommonded Restaurant List</p>
                   </div>
                   <div className="card-body">
                     {/*Category and Search*/}
-                    <Row>
+                    {/* <Row>
                       <Col span={16}>
                         <Space direction='vertical'>
                               <h6>Categoary: </h6><Checkbox.Group options={this.categoryOptions} defaultValue={[]} onChange={() => console.log("changed")} />
@@ -98,9 +98,9 @@ export default class Find extends React.Component{
                               />
                             </Space>
                       </Col>
-                    </Row>
+                    </Row> */}
                    {/* Price Range, Car parking, Pet Friendly */}
-                    <Row>
+                    {/* <Row>
                         <Col span={12} >
                           <h6>Price Range(€/per)</h6>
                           <Slider range defaultValue={[0, 150]}  min={0} max={150}/> 
@@ -109,7 +109,7 @@ export default class Find extends React.Component{
                         <h6>Car Park Needed </h6><Switch defaultChecked/></Space>
                         </Col>
                         <Col span={3}  push={4}><Space direction='vertical'><h6>Pet friendly</h6><Switch defaultChecked/></Space></Col>
-                    </Row>
+                    </Row> */}
 
                     {/*Table results here */}
                     <Table columns={this.columns} dataSource={this.state.result}/>
