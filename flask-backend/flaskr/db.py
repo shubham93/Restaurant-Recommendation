@@ -3,6 +3,7 @@ import sqlite3
 import click
 from flask import current_app, g
 from flask.cli import with_appcontext
+from flaskr.script import insert_json_into_db
 
 
 def get_db():
@@ -30,6 +31,7 @@ def init_db():
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
+    app.cli.add_command(insert_restaurand_command)
 
 @click.command('init-db')
 @with_appcontext
@@ -37,3 +39,9 @@ def init_db_command():
     """Clear the existing data and create new tables."""
     init_db()
     click.echo('Initialized the database.')
+
+@click.command('insert-restaurant')
+@with_appcontext
+def insert_restaurand_command():
+    insert_json_into_db() 
+    click.echo('Completed the restaurant json insertion into database')
