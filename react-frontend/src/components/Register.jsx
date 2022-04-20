@@ -1,6 +1,7 @@
 import React from 'react';
-import {Outlet,NavLink,Link} from 'react-router-dom'
-import {Container,Col,Row,Card,Form,Button} from 'react-bootstrap';
+import {Link} from 'react-router-dom'
+import {Container,Col,Row,Card,Form} from 'react-bootstrap';
+import '../bootstrap.min.css';
 export default class Register extends React.Component{
 
     constructor(props){
@@ -67,7 +68,7 @@ export default class Register extends React.Component{
                                 </Row>   
 
                             
-                            <Button bsPrefix="btn-user" className="d-block btn-primary btn-user w-100">Register Account</Button>
+                            <button className="d-block btn-primary btn-user w-100" type='submit'>Register Account</button>
                             
                           </Form>      
                           <hr/>
