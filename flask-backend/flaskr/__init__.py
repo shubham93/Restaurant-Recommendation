@@ -38,4 +38,7 @@ def create_app(test_config=None):
     from . import restaurants
     app.register_blueprint(restaurants.bp)
 
+    from . import user_features
+    app.register_blueprint(user_features.bp)
+
     return app
