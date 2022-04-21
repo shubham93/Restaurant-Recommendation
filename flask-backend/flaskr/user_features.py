@@ -4,10 +4,12 @@ from flask import (
 )
 from flaskr.auth import login_required
 from flaskr.db_utils import *
+from flask_cors import cross_origin
 
 bp = Blueprint('features', __name__, url_prefix='/features')
 
 @bp.route('/<user_id>', methods=["GET", "PUT", "POST"])
+@cross_origin()
 @login_required
 def features_list(user_id):
     print("User id ....", user_id)
