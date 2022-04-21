@@ -1,16 +1,18 @@
 import functools
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for, make_response
+    Blueprint, flash, g, request, session, make_response, jsonify
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from flaskr.db import get_db
 from flaskr.db_utils import *
+from flask_cors import cross_origin
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.route('/register', methods=['POST'])
+@cross_origin()
 def register():
     error = None
     firstname = request.form['firstname']
@@ -32,7 +34,7 @@ def register():
             update_db( "INSERT INTO user (firstname, lastname, email, password) VALUES (?, ?, ?, ?)",
                 (firstname, lastname, email, generate_password_hash(password)))
         except db.IntegrityError:
-            error = f"User {firstname} is already registered."
+            error = "User {firstname} is already registered."
     flash(error)
     if error:
         return make_response(error, 500)
@@ -40,6 +42,7 @@ def register():
         return make_response("User registered successfully", 200)
 
 @bp.route('/login', methods=['POST'])
+@cross_origin()
 def login():
     error = None
     email = request.form['email']
@@ -59,7 +62,8 @@ def login():
     if error:
         return make_response(error, 500)
     else:
-        return make_response("User logged in successfully", 200)
+        login_response = {"user_id": session['user_id']}
+        return make_response(login_response, 200)
 
 @bp.before_app_request
 def load_logged_in_user():
