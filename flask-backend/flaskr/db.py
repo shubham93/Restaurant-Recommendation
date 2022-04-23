@@ -31,7 +31,7 @@ def init_db():
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
-    app.cli.add_command(insert_restaurand_command)
+    app.cli.add_command(insert_restaurant_command)
 
 @click.command('init-db')
 @with_appcontext
@@ -42,6 +42,6 @@ def init_db_command():
 
 @click.command('insert-restaurant')
 @with_appcontext
-def insert_restaurand_command():
+def insert_restaurant_command():
     insert_json_into_db() 
     click.echo('Completed the restaurant json insertion into database')

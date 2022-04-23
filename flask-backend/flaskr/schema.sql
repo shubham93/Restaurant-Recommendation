@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS restaurants;
-DROP TABLE IF EXISTS userfeatures;
+DROP TABLE IF EXISTS userprofile;
+DROP TABLE IF EXISTS userrating;
 
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,7 +25,7 @@ CREATE TABLE restaurants (
   business_hours TEXT
 );
 
-CREATE TABLE userfeatures (
+CREATE TABLE userprofile (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   alcohol_present TEXT,
   free_wifi_present BOOLEAN,
@@ -38,4 +39,13 @@ CREATE TABLE userfeatures (
   price_range INTEGER,
   user_id INTEGER NOT NULL,
   FOREIGN KEY (user_id) REFERENCES user (id)
+);
+
+CREATE TABLE userrating (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  restaurant_id TEXT NOT NULL,
+  rating DECIMAL NOT NULL,
+  user_id INTEGER NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES user (id)
+  FOREIGN KEY (restaurant_id) REFERENCES restaurants (id)
 );
