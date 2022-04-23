@@ -26,7 +26,7 @@ CREATE TABLE restaurants (
 
 CREATE TABLE userfeatures (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  alcohol_present BOOLEAN,
+  alcohol_present TEXT,
   free_wifi_present BOOLEAN,
   accepts_credit_cards BOOLEAN,
   bike_parking BOOLEAN,
