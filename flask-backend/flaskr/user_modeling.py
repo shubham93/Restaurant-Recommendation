@@ -1,18 +1,7 @@
-# %%
 import json
 import random
-f = open('featuresNew.json')
-features=json.load(f)
-fr = open('Business_Restaurant.json')
-Business_Restaurant=json.load(fr)
 
-# print(type(features))
-# print(type(features))
-# print(features)
-
-
-# %%
-def mapper(features):
+def get_mapped_features(features):
     features['BusinessAcceptsCreditCards'] = features.pop('accepts_credit_cards')
     features['Alcohol'] = features.pop('alcohol_present')
     features['BikeParking'] = features.pop('bike_parking')
@@ -32,52 +21,50 @@ def mapper(features):
            #print(value, type(value)) 
 
     for key, value in dict(features).items():  # removing false values 
-      if (value == "False" or value == "false"):
+      if (value == "False" or value == "false" or key =="user_id" or key == "id"):
           del features[key]
 
-
+    print("Features...", features)
     return features
 
-# %%
-
-
-Feature_mapped= mapper(features)
-print(type(Feature_mapped))
-print(Feature_mapped)
-
-# %%
-def get_recommendation_data(Feature_mapped,Business_Restaurant):
-        filter_keys = Feature_mapped.keys()
+def get_recommendation_data(mapped_features,restaurant_list):
+    filter_keys = mapped_features.keys()
+    if(len(filter_keys) > 0):
         result = []
-        for restaurant in (Business_Restaurant):
-                if 'attributes' in restaurant:
-                        try:
-                                attr = json.loads(restaurant['attributes'])
-                                attr_keys = attr.keys()
-                                temp = []
-                                for fk in filter_keys:
-                                        if fk in attr_keys:
-                                                if Feature_mapped[fk] == attr[fk]:
-                                                        temp.append(fk)
-                                if len(filter_keys) == len(temp):
-                                        result.append(restaurant)
+        for restaurant in (restaurant_list):
+            if 'attributes' in restaurant:
+                try:
+                    attr = json.loads(restaurant['attributes'])
+                    attr_keys = attr.keys()
+                    temp = []
+                    for fk in filter_keys:
+                        if fk in attr_keys:
+                            if mapped_features[fk] == attr[fk]:
+                                temp.append(fk)
+                    if len(filter_keys) == len(temp):
+                            result.append(restaurant)
 
-                        except:
-                                pass
+                except:
+                        pass
 
-        #list=random.sample(result,100)
-        #print(json.dumps(result[:10],indent=4))
+            #list=random.sample(result,100)
+            #print(json.dumps(result[:10],indent=4))
+        print("Result...", result)
         if len(result) > 100:
-                list = random.sample(result, 100)
+            list = random.sample(result, 100)
         else:
-                list = random.sample(result, len(result))
+            list = random.sample(result, len(result))
+  
         return list
+    else:
+        return random.sample(restaurant_list, 100)
 
-# %%
-list=get_recommendation_data(Feature_mapped,Business_Restaurant)
-print(len(list))
-output=json.dumps(list,indent=4)
-print(type(output))
- 
 
-# %%
+def get_recommended_restaurants(restaurants, features):
+    mapped_features = {}
+    if features is not None:
+        mapped_features = get_mapped_features(features)
+    recommendations = get_recommendation_data(mapped_features, restaurants)
+    return json.dumps(recommendations,indent=4)
+
+

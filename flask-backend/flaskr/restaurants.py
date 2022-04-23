@@ -4,6 +4,7 @@ from flask import (
 )
 from flaskr.auth import login_required
 from flaskr.db_utils import *
+from flaskr.user_modeling import get_recommended_restaurants
 from flask_cors import cross_origin
 
 bp = Blueprint('restaurant', __name__, url_prefix='/restaurants')
@@ -21,7 +22,8 @@ def get_restaurant_list():
 @cross_origin()
 # @login_required
 def get_restaurant_data(user_id):
-    ## TODO Move this logic to user modifier
-    resturant_list = query_db('SELECT * FROM restaurants LIMIT 100')
-    return make_response(jsonify(resturant_list), 201)
+    resturant_list = query_db('SELECT * FROM restaurants')
+    user_features = query_db('SELECT * FROM userprofile WHERE user_id = ?', (user_id,), True)
+    resturants = get_recommended_restaurants(resturant_list, user_features)
+    return make_response(resturants, 201)
  
