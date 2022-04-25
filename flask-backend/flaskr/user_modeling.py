@@ -24,7 +24,7 @@ def get_mapped_features(features):
       if (value == "False" or value == "false" or key =="user_id" or key == "id"):
           del features[key]
 
-    print("Features...", features)
+    # print("Features...", features)
     return features
 
 def get_recommendation_data(mapped_features,restaurant_list):
@@ -32,24 +32,24 @@ def get_recommendation_data(mapped_features,restaurant_list):
     if(len(filter_keys) > 0):
         result = []
         for restaurant in (restaurant_list):
-            if 'attributes' in restaurant:
-                try:
-                    attr = json.loads(restaurant['attributes'])
-                    attr_keys = attr.keys()
-                    temp = []
-                    for fk in filter_keys:
-                        if fk in attr_keys:
-                            if mapped_features[fk] == attr[fk]:
-                                temp.append(fk)
-                    if len(filter_keys) == len(temp):
-                            result.append(restaurant)
-
-                except:
-                        pass
+            print("Restaurant...", restaurant)
+            if hasattr(restaurant, "attributes"):
+                print("in attributes")
+                attr = json.loads(restaurant['attributes'])
+                attr_keys = attr.keys()
+                temp = []
+                print("Filter keys...", filter_keys)
+                print("Attr keys...", attr_keys)
+                for fk in filter_keys:
+                    if fk in attr_keys:
+                        if mapped_features[fk] == attr[fk]:
+                            temp.append(fk)
+                if len(filter_keys) == len(temp):
+                        result.append(restaurant)
 
             #list=random.sample(result,100)
             #print(json.dumps(result[:10],indent=4))
-        print("Result...", result)
+        # print("Result...", result)
         if len(result) > 100:
             list = random.sample(result, 100)
         else:
