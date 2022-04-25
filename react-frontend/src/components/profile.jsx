@@ -43,13 +43,13 @@ export default class Profile extends React.Component{
                         <form>
                          <Row>
                              
+                            {/*<Col span={12}>*/}
+                            {/*    <Space direction='vertical'>*/}
+                            {/*        <label className="form-label" htmlFor="Caregory"><strong>Category</strong></label>*/}
+                            {/*        <Checkbox.Group id='category'options={this.categoryOptions} defaultValue={[]} onChange={() => console.log("Category changed")} />*/}
+                            {/*    </Space>*/}
+                            {/*</Col>*/}
                             <Col span={12}>
-                                <Space direction='vertical'>
-                                    <label className="form-label" htmlFor="Caregory"><strong>Category</strong></label>
-                                    <Checkbox.Group id='category'options={this.categoryOptions} defaultValue={[]} onChange={() => console.log("Category changed")} />
-                                </Space>
-                            </Col>
-                            <Col span={6}>
                                 <Space direction='vertical'>
                                     <label className="form-label" htmlFor="Alcohol"><strong>Alcohol</strong></label>
                                     <Radio.Group onChange={() => console.log("Alcohol changed")} defaultValue={"u'full_bar'"}>
@@ -59,7 +59,7 @@ export default class Profile extends React.Component{
                                     </Radio.Group>
                                 </Space>
                             </Col>
-                            <Col span={6}>
+                            <Col span={12}>
                             <Space direction='vertical'>
                                     <label className="form-label" htmlFor="Wifi"><strong>Wifi</strong></label>
                                     <Radio.Group onChange={() => console.log("Wifi changed")} defaultValue={"u'free'"}>
