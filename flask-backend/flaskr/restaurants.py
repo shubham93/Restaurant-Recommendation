@@ -22,12 +22,8 @@ def get_restaurant_list():
 @cross_origin()
 @login_required
 def get_restaurant_data(user_id):
-    resturant_list = query_db('SELECT * FROM restaurants LIMIT 1')
+    resturant_list = query_db('SELECT * FROM restaurants LIMIT 20000')
     user_features = query_db('SELECT * FROM userprofile WHERE user_id = ?', (user_id,), True)
-    SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
-    json_url = os.path.join(SITE_ROOT, "./Processed_Business_Restaurant.json")
-    data = json.load(open(json_url))
-    actual_list = [json.dumps(restaurant) for restaurant in resturant_list]
-    resturants = get_recommended_restaurants(actual_list, user_features)
+    resturants = get_recommended_restaurants(resturant_list, user_features)
     return make_response(resturants, 201)
  

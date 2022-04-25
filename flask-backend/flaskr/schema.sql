@@ -20,7 +20,7 @@ CREATE TABLE restaurants (
   postal_code TEXT,
   stars INTEGER,
   review_count INTEGER,
-  attributes TEXT,
+  attributes VARCHAR,
   categories TEXT,
   business_hours TEXT
 );
