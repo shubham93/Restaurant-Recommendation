@@ -50,4 +50,3 @@ def features_list(user_id):
         if user_features is None:
             user_features = {}
         return make_response(jsonify(user_features), 201)
- 

@@ -17,8 +17,6 @@ class App extends React.Component {
     this.changeImg = this.changeImg.bind(this);
   }
 
-
-
   changeImg = (newUrl) =>{
       console.log(this.imgdiv.current);
   }
@@ -38,7 +36,7 @@ class App extends React.Component {
                       <Route path='profile' element={<Profile/>}/>
                   </Route>
 
-                  <Route path="*" element={<Navigate to="/app/home"></Navigate>}></Route>
+                  <Route path="*" element={<Navigate to="/login"></Navigate>}></Route>
                   
   
       </Routes>

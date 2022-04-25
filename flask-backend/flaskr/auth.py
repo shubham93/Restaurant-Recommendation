@@ -15,10 +15,11 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 @cross_origin()
 def register():
     error = None
-    firstname = request.form['firstname']
-    lastname = request.form['lastname']
-    email = request.form['email']
-    password = request.form['password']
+    data = request.get_json()
+    firstname = data['firstname']
+    lastname = data['lastname']
+    email = data['email']
+    password = data['password']
 
     if not firstname:
         error = 'Firstname is required.'
@@ -37,16 +38,19 @@ def register():
             error = "User {firstname} is already registered."
     flash(error)
     if error:
-        return make_response(error, 500)
+        return make_response({"error" : error}, 500)
     else:
-        return make_response("User registered successfully", 200)
+        return make_response({"data" : "User registered successfully"}, 200)
 
 @bp.route('/login', methods=['POST'])
 @cross_origin()
 def login():
     error = None
-    email = request.form['email']
-    password = request.form['password']
+    data = request.get_json()
+    email = data['email']
+    password = data['password']
+    #email = request.form['email']
+    #password = request.form['password']
     user = query_db('SELECT * FROM user WHERE email = ?', (email,), True)
 
     if user is None:
@@ -60,7 +64,7 @@ def login():
 
     flash(error)
     if error:
-        return make_response(error, 500)
+        return make_response({"error" : error}, 500)
     else:
         login_response = {"user_id": session['user_id']}
         return make_response(login_response, 200)
@@ -90,4 +94,3 @@ def login_required(view):
 def logout():
     session.clear()
     return make_response("User logged out successfully", 200)
-

@@ -38,4 +38,3 @@ def user_ratings(user_id, restaurant_id):
     if error:
         flash(error)
         return make_response({"error": error}, 400)
- 
