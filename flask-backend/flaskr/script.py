@@ -5,7 +5,7 @@ from flaskr.db_utils import update_db
 
 def insert_json_into_db():
     SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
-    json_url = os.path.join(SITE_ROOT, "./Business_Restaurant.json")
+    json_url = os.path.join(SITE_ROOT, "./Processed_Business_Restaurant.json")
     data = json.load(open(json_url))
     count = 0
     for item in data:
