@@ -4,10 +4,7 @@ import {Alert} from 'react-bootstrap';
 import '../bootstrap.min.css';
 import { AiFillEnvironment, AiFillHome, AiFillSmile, AiOutlineTeam,AiOutlineHeart } from 'react-icons/ai';
 
-
-
 export default class Main extends React.Component{
-
 
     constructor(props){
         super(props)
@@ -16,6 +13,7 @@ export default class Main extends React.Component{
             username:"TestUserName"
         }
     }
+
     render(){
 
         return(
@@ -49,7 +47,7 @@ export default class Main extends React.Component{
                                 <div className="nav-item dropdown no-arrow">
                                     <a className="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
                                         <span className="d-none d-lg-inline me-2 text-gray-600 small">
-                                            {this.state.loggedIn?this.state.username:<Link to="../login">Login</Link>}
+                                            {this.state.loggedIn?this.state.username:<Link to="../login">Logout</Link>}
                                             </span>
                                     </a>
                                 </div>
@@ -59,7 +57,7 @@ export default class Main extends React.Component{
                 </nav>
                 <div className="container-fluid">
                     <div>
-                        {this.state.loggedIn?<div/>:<Alert>Please login</Alert>}
+                        {/*{this.state.loggedIn?<div/>:<Alert>Please login</Alert>}*/}
                         <Outlet/>
                         </div>
                 </div>

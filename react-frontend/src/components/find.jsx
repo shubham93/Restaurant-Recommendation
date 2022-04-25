@@ -7,6 +7,8 @@ import '../bootstrap.min.css';
 export default class Find extends React.Component{
 
 
+    // todo : show detailed restaurants here
+
     showDetail(name){
       this.state.result.forEach(element => {
         if (element.name == name){
