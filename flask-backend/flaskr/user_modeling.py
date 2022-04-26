@@ -55,7 +55,16 @@ def get_recommendation_data(mapped_features,restaurant_list, ratings_info, ratin
             list = list[0:100]
         return list
     else:
-        return restaurant_list[0:100]
+        actual_restaurant_list = []
+        for restaurant in restaurant_list:
+            try:
+                attributes =  get_actual_attributes(restaurant)
+                restaurant["attributes"] = attributes
+                actual_restaurant_list.append(restaurant)
+            except:
+                pass
+
+        return actual_restaurant_list[0:100]
 
 def is_value_not_None(value):
     return value != "None" and value != None and value !="'None'"
