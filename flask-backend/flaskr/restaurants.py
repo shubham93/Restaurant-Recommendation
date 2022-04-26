@@ -24,5 +24,5 @@ def get_restaurant_data(user_id):
     user_features = query_db('SELECT * FROM userprofile WHERE user_id = ?', (user_id,), True)
     ## Important beacause you need the new ratings first as they carry more weight
     ratings = query_db('SELECT * FROM userrating WHERE user_id = ? ORDER BY ID DESC', (user_id,))
-    resturants = get_recommended_restaurants(resturant_list, user_features, ratings)
-    return make_response(jsonify(resturants), 201)
+    restaurants = get_recommended_restaurants(resturant_list, user_features, ratings)
+    return make_response(jsonify(restaurants), 201)
