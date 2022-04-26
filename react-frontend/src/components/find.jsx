@@ -1,5 +1,5 @@
 import React from "react";
-import { Checkbox, Input, Space, Slider, Switch, Table, Modal } from "antd";
+import { Rate, Table, Modal } from "antd";
 import { Row, Col } from "antd";
 import "antd/dist/antd.min.css";
 import "../bootstrap.min.css";
@@ -38,131 +38,104 @@ export default class Find extends React.Component {
 
   constructor(props) {
     super(props);
-    this.categoryOptions = [
-      { label: "Cantonese Cuisine", value: "cc" },
-      { label: "Indian Food", value: "if" },
-      { label: "Fast Food", value: "ff" },
-      { label: "Fast Food", value: "ff" },
-      { label: "Fast Food", value: "ff" },
-      { label: "Fast Food", value: "ff" },
-    ];
+    // this.categoryOptions = [
+    //   { label: "Cantonese Cuisine", value: "cc" },
+    //   { label: "Indian Food", value: "if" },
+    //   { label: "Fast Food", value: "ff" },
+    //   { label: "Fast Food", value: "ff" },
+    //   { label: "Fast Food", value: "ff" },
+    //   { label: "Fast Food", value: "ff" },
+    // ];
+
+    // Restaurant Results here
     this.state = {
-      result: [
+      result : [
         {
-          key: 1,
-          name: "Restaurant 1",
-          location: "somewhere",
-          star: 5,
-          info: "Wifi:yes PetFriendly:yes ",
+          key:1,
+          name:"Restaurant 1",
+          location:"somewhere",
+          star:5,
+          info:"here is the info of rest #1"
         },
         {
-          key: 2,
-          name: "Restaurant 2",
-          location: "somewhere",
-          star: 4,
-          info: "here is the info of rest #2",
+          key:2,
+          name:"Restaurant 2",
+          location:"somewhere",
+          star:4,
+          info:"here is the info of rest #2"
         },
         {
-          key: 3,
-          name: "Restaurant 3",
-          location: "somewhere",
-          star: 3,
-          info: "here is the info of rest #3",
+          key:3,
+          name:"Restaurant 3",
+          location:"somewhere",
+          star:3,
+          info:"here is the info of rest #3"
         },
         {
-          key: 1,
-          name: "Restaurant 1",
-          location: "somewhere",
-          star: 5,
-          info: "Wifi:yes PetFriendly:yes ",
+          key:4,
+          name:"Restaurant 3",
+          location:"somewhere",
+          star:3,
+          info:"here is the info of rest #3"
         },
         {
-          key: 2,
-          name: "Restaurant 2",
-          location: "somewhere",
-          star: 4,
-          info: "here is the info of rest #2",
+          key:5,
+          name:"Restaurant 3",
+          location:"somewhere",
+          star:3,
+          info:"here is the info of rest #3"
         },
         {
-          key: 1,
-          name: "Restaurant 1",
-          location: "somewhere",
-          star: 5,
-          info: "Wifi:yes PetFriendly:yes ",
+          key:6,
+          name:"Restaurant 3",
+          location:"somewhere",
+          star:3,
+          info:"here is the info of rest #3"
         },
         {
-          key: 2,
-          name: "Restaurant 2",
-          location: "somewhere",
-          star: 4,
-          info: "here is the info of rest #2",
+          key:7,
+          name:"Restaurant 3",
+          location:"somewhere",
+          star:3,
+          info:"here is the info of rest #3"
         },
         {
-          key: 1,
-          name: "Restaurant 1",
-          location: "somewhere",
-          star: 5,
-          info: "Wifi:yes PetFriendly:yes ",
+          key:8,
+          name:"Restaurant 3",
+          location:"somewhere",
+          star:3,
+          info:"here is the info of rest #3"
         },
         {
-          key: 2,
-          name: "Restaurant 2",
-          location: "somewhere",
-          star: 4,
-          info: "here is the info of rest #2",
+          key:9,
+          name:"Restaurant 3",
+          location:"somewhere",
+          star:3,
+          info:"here is the info of rest #3"
         },
         {
-          key: 1,
-          name: "Restaurant 1",
-          location: "somewhere",
-          star: 5,
-          info: "Wifi:yes PetFriendly:yes ",
-        },
+          key:10,
+          name:"Restaurant 3",
+          location:"somewhere",
+          star:3,
+          info:"here is the info of rest #3"},
         {
-          key: 2,
-          name: "Restaurant 2",
-          location: "somewhere",
-          star: 4,
-          info: "here is the info of rest #2",
-        },
+          key:11,
+          name:"Restaurant 3",
+          location:"somewhere",
+          star:3,
+          info:"here is the info of rest #3"},
+        
         {
-          key: 1,
-          name: "Restaurant 1",
-          location: "somewhere",
-          star: 5,
-          info: "Wifi:yes PetFriendly:yes ",
-        },
-        {
-          key: 2,
-          name: "Restaurant 2",
-          location: "somewhere",
-          star: 4,
-          info: "here is the info of rest #2",
-        },
-        {
-          key: 1,
-          name: "Restaurant 1",
-          location: "somewhere",
-          star: 5,
-          info: "Wifi:yes PetFriendly:yes ",
-        },
-        {
-          key: 2,
-          name: "Restaurant 2",
-          location: "somewhere",
-          star: 4,
-          info: "here is the info of rest #2",
-        },
-        {
-          key: 1,
-          name: "Restaurant 1",
-          location: "somewhere",
-          star: 5,
-          info: "Wifi:yes PetFriendly:yes ",
-        },
-      ],
-      selectedRest: null,
-      detailModalVisible: true,
+          key:12,
+          name:"Restaurant 3",
+          location:"somewhere",
+          star:3,
+          info:"here is the info of rest #3"},
+        ],
+        
+      selectedRest : null,
+      detailModalVisible  : true
     };
     this.showDetail = this.showDetail.bind(this);
   }
@@ -186,6 +159,8 @@ export default class Find extends React.Component {
             }}
           >
             <p>{this.state.selectedRest.info}</p>
+            <Rate allowHalf defaultValue={2.5} />
+            <button  className=" d-block btn-primary btn-user w-20 h-10" type="submit">Submit</button>
           </Modal>
         )}
         <div>
@@ -236,6 +211,7 @@ export default class Find extends React.Component {
                   <Table
                     columns={this.columns}
                     dataSource={this.state.result}
+                    pagination={{ defaultPageSize:10}}
                   />
                 </div>
               </div>
