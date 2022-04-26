@@ -38,6 +38,8 @@ def get_recommendation_data(mapped_features,restaurant_list, ratings_info, ratin
             if "attributes" in rest_keys:
                 try:
                     actual_attr = get_actual_attributes(restaurant)
+                    ## Setting jsonified input as attributes value
+                    restaurant["attributes"] = actual_attr
                     obj = {"data": restaurant, "score": get_score(actual_attr, mapped_features, ratings_info, ratings_count)}
                     result.append(obj)
                 ## Important because JSON has a lot of invalid values
@@ -46,8 +48,8 @@ def get_recommendation_data(mapped_features,restaurant_list, ratings_info, ratin
                     # print("Syntax error at ", index)
         
         result.sort(key=lambda x: x["score"])
-        r = next(item for item in result if item["data"]["id"] == "INGFx5d5dnmhw0wfkDqx2g")
-        print("Score of r...", r["score"])
+        # r = next(item for item in result if item["data"]["id"] == "INGFx5d5dnmhw0wfkDqx2g")
+        # print("Score of r...", r["score"])
         list = [item["data"] for item in result]
         if len(result) > 100:
             list = list[0:100]
@@ -164,6 +166,6 @@ def get_recommended_restaurants(restaurants, features, ratings):
         ratings_info, ratings_count = get_ratings_information(ratings, restaurants)
     print("Rating Info..." ,ratings_info)
     recommendations = get_recommendation_data(mapped_features, restaurants, ratings_info, ratings_count)
-    return json.dumps(recommendations,indent=4)
+    return {"results": recommendations}
 
 
