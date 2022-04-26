@@ -24,6 +24,7 @@ def get_restaurant_list():
 def get_restaurant_data(user_id):
     resturant_list = query_db('SELECT * FROM restaurants LIMIT 20000')
     user_features = query_db('SELECT * FROM userprofile WHERE user_id = ?', (user_id,), True)
-    resturants = get_recommended_restaurants(resturant_list, user_features)
+    ratings = query_db('SELECT * FROM userrating WHERE user_id = ?', (user_id,))
+    resturants = get_recommended_restaurants(resturant_list, user_features, ratings)
     return make_response(resturants, 201)
  

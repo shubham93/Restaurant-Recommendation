@@ -24,7 +24,12 @@ def get_mapped_features(features):
           del features[key]
     return features
 
-def get_recommendation_data(mapped_features,restaurant_list):
+def get_actual_attributes(restaurant):
+    attr = json.loads(restaurant["attributes"])
+    attr = ast.literal_eval(attr)
+    return get_filtered_attributes(attr)
+
+def get_recommendation_data(mapped_features,restaurant_list, ratings_info):
     filter_keys = mapped_features.keys()
     if(len(filter_keys) > 0):
         result = []
@@ -32,12 +37,13 @@ def get_recommendation_data(mapped_features,restaurant_list):
             rest_keys = restaurant.keys()
             if "attributes" in rest_keys:
                 try:
-                    attr = json.loads(restaurant["attributes"])
-                    attr = ast.literal_eval(attr)
-                    actual_attr = get_filtered_attributes(attr)
-                    obj = {"data": restaurant, "score": get_score(actual_attr, mapped_features)}
+                    # attr = json.loads(restaurant["attributes"])
+                    # attr = ast.literal_eval(attr)
+                    # actual_attr = get_filtered_attributes(attr)
+                    actual_attr = get_actual_attributes(restaurant)
+                    obj = {"data": restaurant, "score": get_score(actual_attr, mapped_features, ratings_info)}
                     result.append(obj)
-                    
+                ## Important because JSON has a lot of invalid values
                 except SyntaxError:
                     pass
                     # print("Syntax error at ", index)
@@ -57,10 +63,10 @@ def is_value_not_None(value):
     return value != "None" and value != None and value !="'None'"
 
 ## Get manhattan distance between user features and restaurant attributes
-def get_score(attributes, mapped_features):
+def get_score(attributes, mapped_features, ratings_info):
     score = 0
     for key in FEATURE_LIST:
-        score += abs(attributes[key] - mapped_features[key])
+        score += (ratings_info[key] * abs(attributes[key] - mapped_features[key]))
     return score
 
 
@@ -100,13 +106,50 @@ def get_mapped_value_for_price_range(value):
 def get_mapped_value_for_boolean(value):
     return int(value == "True" or value == "true")
 
+## Logic for this is to give more fraction value so that weight multiplied when sorting 
+## is less for features that were given higher ratings
+## This will make the manhattan distance tends to zero and the restaurant will be in top results
+def get_rating_weight(rating):
+    if rating > 4:
+        return 5 - rating * 0.001
+    elif rating > 2:
+        return 4 - rating * 0.01
+    else:
+        return 2 - rating * 0.1
+
+
+## Method to generate feature weights based on ratings provided by the user
+def get_ratings_information(ratings, restaurants):
+    if(len(ratings) > 0):
+        rating_info = {}
+        for index, ratings_data in enumerate(ratings):
+            ## Divide ratings by 10, so that we get rating per feature
+            rating = float(ratings_data["rating"])/10
+            restaurant = next(item for item in restaurants if item["id"] == ratings_data["restaurant_id"])
+            attributes = get_actual_attributes(restaurant)
+            attr_keys = attributes.keys()
+            for key in attr_keys:
+                if key in rating_info:
+                    rating_info[key] += get_rating_weight(rating) * attributes[key]
+                else:
+                    rating_info[key] = get_rating_weight(rating) * attributes[key]
+        return rating_info
+            
+    else:
+        default_info = {}
+        for item in FEATURE_LIST:
+            default_info[item] = 1
+        return default_info
 
 ## Main method to get recommendation for restaurants
-def get_recommended_restaurants(restaurants, features):
+def get_recommended_restaurants(restaurants, features, ratings):
     mapped_features = {}
+    ratings_info = {}
     if features is not None:
         mapped_features = get_mapped_features(features)
-    recommendations = get_recommendation_data(mapped_features, restaurants)
+    if ratings is not None:
+        ratings_info = get_ratings_information(ratings, restaurants)
+    recommendations = get_recommendation_data(mapped_features, restaurants, ratings_info)
     return json.dumps(recommendations,indent=4)
 
 
