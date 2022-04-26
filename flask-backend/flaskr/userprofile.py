@@ -10,25 +10,25 @@ bp = Blueprint('profile', __name__, url_prefix='/profile')
 
 @bp.route('/<user_id>', methods=["GET", "PUT", "POST"])
 @cross_origin()
-@login_required
 def features_list(user_id):
     print("User id ....", user_id)
     user_features = query_db('SELECT * FROM userprofile WHERE user_id = ?', (user_id,), True)
     error = None
     if request.method == "POST" and user_features is not None:
         error = "POST request not supported for existing user"
-        return make_response(error, 400)
+        return make_response({"error" : error}, 400)
     if request.method == 'POST' or request.method == 'PUT':
-        alcohol_present = request.form["alcohol_present"]
-        free_wifi_present = request.form["free_wifi_present"]
-        accepts_credit_cards = request.form["accepts_credit_cards"]
-        bike_parking  = request.form["bike_parking"]
-        good_for_kids = request.form["good_for_kids"]
-        restaurant_reservation = request.form["restaurant_reservation"]
-        outdoor_seating = request.form["outdoor_seating"]
-        smoking = request.form["smoking"]
-        coat_check = request.form["coat_check"]
-        price_range = request.form["price_range"]
+        data = request.get_json()
+        alcohol_present = data["alcohol_present"]
+        free_wifi_present = data["free_wifi_present"]
+        accepts_credit_cards = data["accepts_credit_cards"]
+        bike_parking  = data["bike_parking"]
+        good_for_kids = data["good_for_kids"]
+        restaurant_reservation = data["restaurant_reservation"]
+        outdoor_seating = data["outdoor_seating"]
+        smoking = data["smoking"]
+        coat_check = data["coat_check"]
+        price_range = data["price_range"]
         query = None
         print("coat_check val...", coat_check)
         if request.method == 'POST':
@@ -43,7 +43,7 @@ def features_list(user_id):
             error = "Db operation unsuccessful"
     if error:
         flash(error)
-        return make_response(error, 400)
+        return make_response({"error" : error}, 400)
     ## Code assumes that the errors have been handled and only get request handling will be left
     else:
         user_features = query_db('SELECT * FROM userprofile WHERE user_id = ?', (user_id,), True)

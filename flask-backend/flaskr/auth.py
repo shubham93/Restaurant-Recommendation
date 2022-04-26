@@ -15,12 +15,11 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 @cross_origin()
 def register():
     error = None
-    # data = request.get_json(force= True)
-
-    firstname = request.form['firstname']
-    lastname = request.form['lastname']
-    email = request.form['email']
-    password = request.form['password']
+    data = request.get_json()
+    firstname = data['firstname']
+    lastname = data['lastname']
+    email = data['email']
+    password = data['password']
 
     if not firstname:
         error = 'Firstname is required.'
@@ -47,11 +46,9 @@ def register():
 @cross_origin()
 def login():
     error = None
-    # data = request.get_json()
-    # email = data['email']
-    # password = data['password']
-    email = request.form['email']
-    password = request.form['password']
+    data = request.get_json()
+    email = data['email']
+    password = data['password']
     user = query_db('SELECT * FROM user WHERE email = ?', (email,), True)
 
     if user is None:

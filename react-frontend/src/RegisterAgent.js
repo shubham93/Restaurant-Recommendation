@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {Col, Form, Row} from "react-bootstrap";
 import { useNavigate } from 'react-router-dom'
+import {Radio, Space} from "antd";
 
 function RegisterAgent() {
     const [email, setEmail] = useState('')
@@ -36,6 +37,24 @@ function RegisterAgent() {
         const _response = await post_register()
         console.log(_response)
         if (_response['status'] == 200) {
+            const post_response = await fetch('http://127.0.0.1:5000/profile/1', {
+                method : 'POST',
+                headers : {
+                    'Content-Type' : 'application/json'
+                },
+                body : JSON.stringify({
+                    alcohol_present : "None",
+                    free_wifi_present : true,
+                    accepts_credit_cards : false,
+                    bike_parking : false,
+                    good_for_kids : false,
+                    restaurant_reservation : false,
+                    outdoor_seating : false,
+                    smoking : false,
+                    coat_check : false,
+                    price_range : 2
+                })
+            })
             alert("register success!")
             setIsPending(false)
             navi("/login", {replace: true})

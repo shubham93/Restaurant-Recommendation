@@ -21,8 +21,8 @@ function LoginAgent() {
         })
         // console.log("response...", _response)
         const data = await _response.json()
-        // const id = data['user_id']
-        // console.log("User id", id)
+        const id = data['user_id']
+        console.log("User id", id)
         // console.log("Response", data)
         return {data : data, status : _response.status}
             // .then(response => response['user_id'])
