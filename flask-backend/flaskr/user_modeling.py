@@ -1,9 +1,9 @@
 import json
-import random
 import ast
 
 FEATURE_LIST = ["BusinessAcceptsCreditCards", "Alcohol", "BikeParking", "CoatCheck", "WiFi", "GoodForKids", "OutdoorSeating", "RestaurantsPriceRange2", "RestaurantsReservations", "Smoking"]
 FEATURE_LIST_NON_BOOLEAN = ["Alcohol", "RestaurantsPriceRange2"]
+RATING_THRESHOLD = 5
 
 
 ## Main mapper function to map database attributes to attributes json trpe
@@ -24,43 +24,56 @@ def get_mapped_features(features):
           del features[key]
     return features
 
-def get_recommendation_data(mapped_features,restaurant_list):
+def get_actual_attributes(restaurant):
+    attr = json.loads(restaurant["attributes"])
+    attr = ast.literal_eval(attr)
+    return get_filtered_attributes(attr)
+
+def get_recommendation_data(mapped_features,restaurant_list, ratings_info, ratings_count):
     filter_keys = mapped_features.keys()
     if(len(filter_keys) > 0):
         result = []
-        for index, restaurant in enumerate(restaurant_list):
+        for restaurant in restaurant_list:
             rest_keys = restaurant.keys()
             if "attributes" in rest_keys:
                 try:
-                    attr = json.loads(restaurant["attributes"])
-                    attr = ast.literal_eval(attr)
-                    actual_attr = get_filtered_attributes(attr)
-                    obj = {"data": restaurant, "score": get_score(actual_attr, mapped_features)}
+                    actual_attr = get_actual_attributes(restaurant)
+                    ## Setting jsonified input as attributes value
+                    restaurant["attributes"] = actual_attr
+                    obj = {"data": restaurant, "score": get_score(actual_attr, mapped_features, ratings_info, ratings_count)}
                     result.append(obj)
-                    
+                ## Important because JSON has a lot of invalid values
                 except SyntaxError:
                     pass
                     # print("Syntax error at ", index)
         
         result.sort(key=lambda x: x["score"])
+        # r = next(item for item in result if item["data"]["id"] == "INGFx5d5dnmhw0wfkDqx2g")
+        # print("Score of r...", r["score"])
         list = [item["data"] for item in result]
         if len(result) > 100:
-            list = random.sample(list, 100)
-        else:
-            list = random.sample(list, len(list))
-  
+            list = list[0:100]
         return list
     else:
-        return random.sample(restaurant_list, 100)
+        return restaurant_list[0:100]
 
 def is_value_not_None(value):
     return value != "None" and value != None and value !="'None'"
 
+## Code to evaluate the actual feature value 
+## Takes into consideration the mapped feature and the rating info
+def get_actual_feature_value(ratings_feature, mapped_feature, ratings_count):
+    if ratings_count > RATING_THRESHOLD:
+        return ratings_feature
+    else:
+        weight = ratings_count/RATING_THRESHOLD
+        return round(abs((1 - weight)*mapped_feature - (weight * ratings_count)))
+
 ## Get manhattan distance between user features and restaurant attributes
-def get_score(attributes, mapped_features):
+def get_score(attributes, mapped_features, ratings_info, ratings_count):
     score = 0
     for key in FEATURE_LIST:
-        score += abs(attributes[key] - mapped_features[key])
+        score += abs(attributes[key] - get_actual_feature_value(mapped_features[key], ratings_info[key], ratings_count))
     return score
 
 
@@ -100,13 +113,59 @@ def get_mapped_value_for_price_range(value):
 def get_mapped_value_for_boolean(value):
     return int(value == "True" or value == "true")
 
+## Method to return rating weight
+## This is to ensure that recent ratings have a higher weightage
+def get_rating_weight(index, rating):
+    if index < RATING_THRESHOLD:
+        return rating
+    elif index < 2*RATING_THRESHOLD:
+        return 0.5*rating
+    else:
+        return 0.1*rating
+
+
+
+## Method to generate feature weights based on ratings provided by the user
+def get_ratings_information(ratings, restaurants):
+    ratings_count = len(ratings)
+    if(ratings_count > 0):
+        rating_info = {}
+
+        for index, ratings_data in enumerate(ratings):
+            ## Divide ratings by 5, so that we get rating per feature
+            ## Since 10 is feature count and rating is between 0,5 weight of each rating is 2
+            ## So actual rating will be rating * 2/ 10 = rating/5
+            rating = float(ratings_data["rating"])/RATING_THRESHOLD
+            restaurant = next(item for item in restaurants if item["id"] == ratings_data["restaurant_id"])
+            # print("Restaurant...", restaurant)
+            attributes = get_actual_attributes(restaurant)
+            attr_keys = attributes.keys()
+            for key in attr_keys:
+                if key in rating_info:
+                    rating_info[key] += get_rating_weight(index, rating) * attributes[key]
+                else:
+                    rating_info[key] = get_rating_weight(index, rating)* attributes[key]
+        
+        for key in rating_info:
+            rating_info[key] = rating_info[key]/ratings_count
+        return rating_info, ratings_count
+            
+    else:
+        default_info = {}
+        for item in FEATURE_LIST:
+            default_info[item] = 1
+        return default_info, 0
 
 ## Main method to get recommendation for restaurants
-def get_recommended_restaurants(restaurants, features):
+def get_recommended_restaurants(restaurants, features, ratings):
     mapped_features = {}
+    ratings_info = {}
     if features is not None:
         mapped_features = get_mapped_features(features)
-    recommendations = get_recommendation_data(mapped_features, restaurants)
-    return json.dumps(recommendations,indent=4)
+    if ratings is not None:
+        ratings_info, ratings_count = get_ratings_information(ratings, restaurants)
+    print("Rating Info..." ,ratings_info)
+    recommendations = get_recommendation_data(mapped_features, restaurants, ratings_info, ratings_count)
+    return {"results": recommendations}
 
 
