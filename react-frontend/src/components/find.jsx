@@ -6,13 +6,33 @@ import "../bootstrap.min.css";
 import { AiOutlineCloseCircle, AiOutlineCheckCircle } from "react-icons/ai";
 
 export default class Find extends React.Component {
-  showDetail(name) {
-    this.state.restaurants.forEach((element) => {
-      if (element.name == name) {
-        this.setState({ selectedRest: element, detailModalVisible: true });
+  async showDetail(name) {
+    const selectedRestaurant = this.state.restaurants.find(
+      (data) => data.name == name
+    );
+    console.log("restaurant ", selectedRestaurant);
+    const _response = await fetch(
+      `http://127.0.0.1:5000/ratings/${this.userId}/${selectedRestaurant.id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
+    );
+    const data = await _response.json();
+    const rating = data.rating || 0;
+    console.log("rating,", rating);
+    selectedRestaurant.rating = rating;
+    selectedRestaurant.isPersistedRatingPresent =
+      data.id !== null && data.id !== undefined;
+    this.setState({
+      selectedRest: selectedRestaurant,
+      detailModalVisible: true,
     });
   }
+
+  userId = localStorage.getItem("user_id");
 
   columns = [
     {
@@ -20,7 +40,10 @@ export default class Find extends React.Component {
       dataIndex: "name",
       key: "name",
       render: (text) => (
-        <a style={{ color: "#3b62d0" }} onClick={() => this.showDetail(text)}>
+        <a
+          style={{ color: "#3b62d0" }}
+          onClick={async () => this.showDetail(text)}
+        >
           {text}
         </a>
       ),
@@ -54,6 +77,12 @@ export default class Find extends React.Component {
     });
   }
 
+  updateSelectedRestaurantRating(value) {
+    const selectedRest = { ...this.state.selectedRest };
+    selectedRest.rating = value;
+    this.setState({ selectedRest: selectedRest });
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -63,12 +92,15 @@ export default class Find extends React.Component {
     };
 
     this.showDetail = this.showDetail.bind(this);
+    this.updateSelectedRestaurantRating =
+      this.updateSelectedRestaurantRating.bind(this);
+    this.submitRatingForSelectedRest =
+      this.submitRatingForSelectedRest.bind(this);
   }
 
   async componentDidMount() {
-    const userId = localStorage.getItem("user_id");
     const _response = await fetch(
-      `http://127.0.0.1:5000/restaurants/list/${userId}`,
+      `http://127.0.0.1:5000/restaurants/list/${this.userId}`,
       {
         method: "GET",
         headers: {
@@ -79,6 +111,27 @@ export default class Find extends React.Component {
     const data = await _response.json();
     const restaurantState = this.getMappedResults(data.results);
     this.setState({ restaurants: restaurantState });
+  }
+
+  async submitRatingForSelectedRest() {
+    const selectedRestaurant = this.state.selectedRest;
+    const rating = selectedRestaurant.rating;
+    const requestType = selectedRestaurant.isPersistedRatingPresent
+      ? "PUT"
+      : "POST";
+    const _response = await fetch(
+      `http://127.0.0.1:5000/ratings/${this.userId}/${selectedRestaurant.id}`,
+      {
+        method: requestType,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          rating: rating,
+        }),
+      }
+    );
+    const data = await _response.json();
   }
 
   render() {
@@ -193,10 +246,16 @@ export default class Find extends React.Component {
                 )}
               </Col>
             </Row>
-            <Rate allowHalf defaultValue={0} />
+            <Rate
+              allowHalf
+              defaultValue={0}
+              value={this.state.selectedRest.rating}
+              onChange={this.updateSelectedRestaurantRating}
+            />
             <button
               className=" d-block btn-primary btn-user w-20 h-10"
               type="submit"
+              onClick={this.submitRatingForSelectedRest}
             >
               Submit
             </button>

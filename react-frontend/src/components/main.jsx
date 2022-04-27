@@ -104,7 +104,7 @@ export default class Main extends React.Component {
             <footer className="bg-white sticky-footer">
               <div className="container my-auto">
                 <div className="text-center my-auto copyright">
-                  <span>Copyright © WHAT TO EAT 2022</span>
+                  <span>Copyright © Restaurant Recommendation System 2022</span>
                 </div>
               </div>
             </footer>

@@ -120,7 +120,7 @@ def get_mapped_value_for_price_range(value):
         return int(value)
 
 def get_mapped_value_for_boolean(value):
-    return int(value == "True" or value == "true")
+    return int(value == "True" or value == "true" or value == True)
 
 ## Method to return rating weight
 ## This is to ensure that recent ratings have a higher weightage
