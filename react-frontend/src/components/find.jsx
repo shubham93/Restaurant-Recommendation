@@ -1,6 +1,5 @@
 import React from "react";
-import { Rate, Table, Modal } from "antd";
-import { Row, Col } from "antd";
+import { Rate, Table, Modal, Spin, Row, Col } from "antd";
 import "antd/dist/antd.min.css";
 import "../bootstrap.min.css";
 import { AiOutlineCloseCircle, AiOutlineCheckCircle } from "react-icons/ai";
@@ -80,6 +79,7 @@ export default class Find extends React.Component {
   updateSelectedRestaurantRating(value) {
     const selectedRest = { ...this.state.selectedRest };
     selectedRest.rating = value;
+    debugger;
     this.setState({ selectedRest: selectedRest });
   }
 
@@ -115,6 +115,7 @@ export default class Find extends React.Component {
 
   async submitRatingForSelectedRest() {
     const selectedRestaurant = this.state.selectedRest;
+    this.setState({ isRatingRequestInProgress: true });
     const rating = selectedRestaurant.rating;
     const requestType = selectedRestaurant.isPersistedRatingPresent
       ? "PUT"
@@ -132,6 +133,9 @@ export default class Find extends React.Component {
       }
     );
     const data = await _response.json();
+    setInterval(() => {
+      this.setState({ isRatingRequestInProgress: false });
+    }, 1000);
   }
 
   render() {
@@ -252,13 +256,16 @@ export default class Find extends React.Component {
               value={this.state.selectedRest.rating}
               onChange={this.updateSelectedRestaurantRating}
             />
-            <button
-              className=" d-block btn-primary btn-user w-20 h-10"
-              type="submit"
-              onClick={this.submitRatingForSelectedRest}
-            >
-              Submit
-            </button>
+            <div class="d-flex justify-content-between">
+              <button
+                className=" d-block btn-primary btn-user w-20 h-10"
+                type="submit"
+                onClick={this.submitRatingForSelectedRest}
+              >
+                Submit
+              </button>
+              {this.state.isRatingRequestInProgress ? <Spin /> : <div></div>}
+            </div>
           </Modal>
         )}
         <div>

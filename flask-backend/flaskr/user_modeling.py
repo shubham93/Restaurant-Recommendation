@@ -22,6 +22,7 @@ def get_mapped_features(features):
     for key in dict(features).items():  # removing false values 
       if (key =="user_id" or key == "id"):
           del features[key]
+    print("Features...", features)
     return features
 
 def get_actual_attributes(restaurant):
