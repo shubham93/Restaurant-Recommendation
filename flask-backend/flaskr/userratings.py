@@ -8,9 +8,8 @@ from flask_cors import cross_origin
 
 bp = Blueprint('ratings', __name__, url_prefix='/ratings')
 
-@bp.route('/<user_id>/<restaurant_id>', methods=["GET", "PUT", "POST"])
+@bp.route('/<user_id>/<restaurant_id>', methods=("GET", "PUT", "POST"))
 @cross_origin()
-@login_required
 def user_ratings(user_id, restaurant_id):
     print("User id ....", user_id)
     print("Restaurant id ....", restaurant_id)
@@ -24,7 +23,8 @@ def user_ratings(user_id, restaurant_id):
         error = "POST request not supported for existing rating"
         return make_response({"error": error}, 400)
     if request.method == 'POST' or request.method == 'PUT':
-        rating = request.form["rating"]
+        data = request.get_json()
+        rating = data["rating"]
         if request.method == 'POST':
             query = "INSERT INTO userrating (rating, user_id, restaurant_id) VALUES (?, ?, ?)"
         else:
@@ -37,4 +37,5 @@ def user_ratings(user_id, restaurant_id):
             error = "Db operation unsuccessful"
     if error:
         flash(error)
+        print(error)
         return make_response({"error": error}, 400)

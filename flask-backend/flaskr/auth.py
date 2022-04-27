@@ -16,7 +16,6 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 def register():
     error = None
     data = request.get_json()
-
     firstname = data['firstname']
     lastname = data['lastname']
     email = data['email']

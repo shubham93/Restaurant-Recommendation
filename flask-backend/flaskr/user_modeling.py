@@ -22,6 +22,7 @@ def get_mapped_features(features):
     for key in dict(features).items():  # removing false values 
       if (key =="user_id" or key == "id"):
           del features[key]
+    print("Features...", features)
     return features
 
 def get_actual_attributes(restaurant):
@@ -55,7 +56,16 @@ def get_recommendation_data(mapped_features,restaurant_list, ratings_info, ratin
             list = list[0:100]
         return list
     else:
-        return restaurant_list[0:100]
+        actual_restaurant_list = []
+        for restaurant in restaurant_list:
+            try:
+                attributes =  get_actual_attributes(restaurant)
+                restaurant["attributes"] = attributes
+                actual_restaurant_list.append(restaurant)
+            except:
+                pass
+
+        return actual_restaurant_list[0:100]
 
 def is_value_not_None(value):
     return value != "None" and value != None and value !="'None'"
@@ -111,7 +121,7 @@ def get_mapped_value_for_price_range(value):
         return int(value)
 
 def get_mapped_value_for_boolean(value):
-    return int(value == "True" or value == "true")
+    return int(value == "True" or value == "true" or value == True)
 
 ## Method to return rating weight
 ## This is to ensure that recent ratings have a higher weightage
@@ -167,5 +177,3 @@ def get_recommended_restaurants(restaurants, features, ratings):
     print("Rating Info..." ,ratings_info)
     recommendations = get_recommendation_data(mapped_features, restaurants, ratings_info, ratings_count)
     return {"results": recommendations}
-
-
