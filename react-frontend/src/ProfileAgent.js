@@ -5,7 +5,7 @@ import { Checkbox, Divider, Radio, Space, Switch } from "antd";
 function ProfileAgent() {
   const userId = localStorage.getItem("user_id");
   const [alcohol_present, setAlcohol] = useState("None");
-  const [wifi, setWifi] = useState(true);
+  const [wifi, setWifi] = useState(false);
   const [bike, setBike] = useState(false);
   const [creditCard, setCreditCard] = useState(false);
   const [kid, setKid] = useState(false);
@@ -14,10 +14,15 @@ function ProfileAgent() {
   const [coat, setCoat] = useState(false);
   const [outdoor, setOutdoor] = useState(false);
   const [price, setPrice] = useState(1);
+  const [profileId, setProfileId] = useState(null);
 
-  async function put_profile() {
+  async function handleRequest() {
+    let requestType = "POST";
+    if (profileId !== null && profileId !== undefined) {
+      requestType = "PUT";
+    }
     const _response = await fetch(`http://127.0.0.1:5000/profile/${userId}`, {
-      method: "PUT",
+      method: requestType,
       headers: {
         "Content-Type": "application/json",
       },
@@ -42,7 +47,8 @@ function ProfileAgent() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    const _response = await put_profile();
+    const _response = await handleRequest();
+
     if (_response["status"] == 200) {
       alert("Profile updated!");
     } else {
@@ -59,18 +65,23 @@ function ProfileAgent() {
     })
       .then((response) => response.json())
       .then((data) => {
-        setAlcohol(data["alcohol_present"]);
-        setWifi(data["free_wifi_present"]);
-        setCreditCard(data["accepts_credit_cards"]);
-        setBike(data["bike_parking"]);
-        setKid(data["good_for_kids"]);
-        setReservation(data["restaurant_reservation"]);
-        setOutdoor(data["outdoor_seating"]);
-        setSmoke(data["smoking"]);
-        setCoat(data["coat_check"]);
-        setPrice(data["price_range"]);
+        setProfileState(data);
       });
   }, []);
+
+  function setProfileState(data) {
+    setAlcohol(data["alcohol_present"] || "None");
+    setWifi(data["free_wifi_present"] || false);
+    setCreditCard(data["accepts_credit_cards"] || false);
+    setBike(data["bike_parking"] || false);
+    setKid(data["good_for_kids"] || false);
+    setReservation(data["restaurant_reservation"] || false);
+    setOutdoor(data["outdoor_seating"] || false);
+    setSmoke(data["smoking"] || false);
+    setCoat(data["coat_check"] || false);
+    setPrice(data["price_range"] || 1);
+    setProfileId(data["id"] || null);
+  }
 
   return (
     <div>
@@ -92,11 +103,11 @@ function ProfileAgent() {
                   console.log("Alcohol changed");
                   setAlcohol(e.target.value);
                 }}
-                defaultValue={"u'full_bar'"}
+                defaultValue={"full_bar'"}
                 value={alcohol_present}
               >
-                <Radio value={"u'full_bar'"}>FullBar</Radio>
-                <Radio value={"'beer_and_wine'"}>BeerandWine</Radio>
+                <Radio value={"full_bar'"}>Full Bar</Radio>
+                <Radio value={"beer_and_wine"}>Beer and Wine</Radio>
                 <Radio value={"None"}>None</Radio>
               </Radio.Group>
             </Space>
@@ -114,8 +125,8 @@ function ProfileAgent() {
                 defaultValue={1}
                 value={wifi}
               >
-                <Radio value={1}>Free</Radio>
-                <Radio value={0}>NotFree</Radio>
+                <Radio value={true}>Paid</Radio>
+                <Radio value={false}>Free</Radio>
               </Radio.Group>
             </Space>
           </Col>
