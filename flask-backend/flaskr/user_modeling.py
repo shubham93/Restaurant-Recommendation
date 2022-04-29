@@ -73,11 +73,11 @@ def is_value_not_None(value):
 ## Code to evaluate the actual feature value 
 ## Takes into consideration the mapped feature and the rating info
 def get_actual_feature_value(ratings_feature, mapped_feature, ratings_count):
-    if ratings_count > RATING_THRESHOLD:
+    if ratings_count > 2* RATING_THRESHOLD:
         return ratings_feature
     else:
         weight = ratings_count/RATING_THRESHOLD
-        return round(abs((1 - weight)*mapped_feature - (weight * ratings_count)))
+        return round(abs((1 - weight)*mapped_feature - (weight * ratings_feature)))
 
 ## Get manhattan distance between user features and restaurant attributes
 def get_score(attributes, mapped_features, ratings_info, ratings_count):
